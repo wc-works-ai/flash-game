@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Card Math Quiz</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: #eee;
+    overflow: hidden;
+    touch-action: manipulation;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Card Box */
+  .card {
+    width: 100%;
+    max-width: 500px;
+    margin: 1rem;
+    padding: 2.5rem 2rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+      0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    text-align: center;
+  }
+
+  /* Screens inside the card */
+  #start-screen, #quiz-screen, #results-screen {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+
+  .config { margin-bottom: 1.5rem; }
+  .config label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .config input {
+    width: 90px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #eee;
+    text-align: center;
+    min-height: 44px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .config input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+  }
+
+  button {
+    padding: 0.75rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.2s;
+    min-height: 48px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (hover: hover) {
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+    }
+  }
+  button:active { transform: translateY(0); }
+
+  /* Timer Bar */
+  .timer-bar-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .timer-bar-fill {
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    transition: width 1s linear, background-color 1s linear;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  /* Question */
+  .question {
+    font-size: 3rem;
+    font-weight: 700;
+    margin: 1.5rem 0;
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    color: #fff;
+  }
+
+  .question-timer {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-variant-numeric: tabular-nums;
+  }
+
+  #answer-input {
+    width: 130px;
+    padding: 0.75rem;
+    font-size: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    text-align: center;
+    min-height: 44px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #answer-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+  }
+
+  /* Total time text */
+  .total-time-display {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Number Pad */
+  .numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 340px;
+    margin: 1.2rem auto 0;
+  }
+  .numpad-btn {
+    padding: 0.8rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    min-height: 64px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.12s, transform 0.1s;
+    box-shadow: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  @media (hover: hover) {
+    .numpad-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    .numpad-btn.clear:hover { background: rgba(231, 76, 60, 0.3); }
+    .numpad-btn.submit:hover {
+      background: linear-gradient(135deg, #7b8eef, #8a5bb5);
+    }
+  }
+  .numpad-btn:active {
+    transform: scale(0.93);
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .numpad-btn.clear {
+    font-size: 1.2rem;
+    background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.3);
+  }
+  .numpad-btn.clear:active { background: rgba(231, 76, 60, 0.4); }
+  .numpad-btn.submit {
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: transparent;
+  }
+  .numpad-btn.submit:active {
+    background: linear-gradient(135deg, #5a6fd6, #6a4296);
+  }
+
+  /* Answer display (replaces input visually) */
+  .answer-display {
+    display: inline-block;
+    width: 160px;
+    min-height: 52px;
+    padding: 0.6rem 0.75rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Feedback Overlay */
+  .quiz-container { position: relative; }
+
+  .feedback-overlay {
+    position: absolute;
+    inset: -8px;
+    border-radius: 16px;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .feedback-correct {
+    animation: correctPulse 0.7s ease-out forwards;
+  }
+  .feedback-incorrect {
+    animation: incorrectShake 0.7s ease-out forwards;
+  }
+
+  @keyframes correctPulse {
+    0%   { opacity: 0; background: rgba(39, 174, 96, 0.3); transform: scale(1); }
+    30%  { opacity: 1; background: rgba(39, 174, 96, 0.4); transform: scale(1.02); }
+    100% { opacity: 0; background: rgba(39, 174, 96, 0); transform: scale(1); }
+  }
+
+  @keyframes incorrectShake {
+    0%   { opacity: 1; background: rgba(231, 76, 60, 0.3); transform: translateX(0); }
+    15%  { background: rgba(231, 76, 60, 0.4); transform: translateX(-8px); }
+    30%  { transform: translateX(8px); }
+    45%  { transform: translateX(-6px); }
+    60%  { transform: translateX(6px); }
+    75%  { transform: translateX(-3px); }
+    90%  { opacity: 0.3; transform: translateX(3px); }
+    100% { opacity: 0; background: rgba(231, 76, 60, 0); transform: translateX(0); }
+  }
+
+  /* Results */
+  .results-stats { margin: 1.5rem 0; font-size: 1.1rem; line-height: 2.2; color: rgba(255, 255, 255, 0.7); }
+  .results-stats .big {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Weakness Analysis */
+  .weakness-section {
+    margin-top: 1.5rem;
+    text-align: left;
+  }
+  .weakness-section h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    font-weight: 500;
+  }
+  .weakness-list {
+    list-style: none;
+    padding: 0;
+  }
+  .weakness-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 1rem;
+  }
+  .weakness-item .question-text {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1.05rem;
+  }
+  .weakness-item .miss-count {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .weakness-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin: 0 10px;
+    overflow: hidden;
+  }
+  .weakness-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    border-radius: 3px;
+  }
+  .no-weakness {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.95rem;
+    padding: 1rem 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .card { padding: 2rem 1.25rem; margin: 0.5rem; }
+    .question { font-size: 2.2rem; }
+    h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<!-- Start Screen -->
+<div id="start-screen">
+  <h1>Flash Card Math Quiz</h1>
+  <div class="config">
+    <label>Total Time (seconds)
+      <br><input type="number" id="total-time-input" value="120" min="10" inputmode="numeric">
+    </label>
+  </div>
+  <div class="config">
+    <label>Per-Question Time (seconds)
+      <br><input type="number" id="question-time-input" value="5" min="1" inputmode="numeric">
+    </label>
+  </div>
+  <button id="start-btn">Start</button>
+</div>
+
+<!-- Quiz Screen -->
+<div id="quiz-screen" class="hidden">
+  <div class="total-time-display" id="total-time-display"></div>
+  <div class="timer-bar-track">
+    <div class="timer-bar-fill" id="timer-bar"></div>
+  </div>
+  <div class="quiz-container">
+    <div class="question" id="question-display"></div>
+    <div class="question-timer" id="question-timer-display"></div>
+    <div class="answer-display" id="answer-display">&nbsp;</div>
+    <input type="hidden" id="answer-input">
+    <div class="numpad">
+      <button type="button" class="numpad-btn" data-num="1">1</button>
+      <button type="button" class="numpad-btn" data-num="2">2</button>
+      <button type="button" class="numpad-btn" data-num="3">3</button>
+      <button type="button" class="numpad-btn" data-num="4">4</button>
+      <button type="button" class="numpad-btn" data-num="5">5</button>
+      <button type="button" class="numpad-btn" data-num="6">6</button>
+      <button type="button" class="numpad-btn" data-num="7">7</button>
+      <button type="button" class="numpad-btn" data-num="8">8</button>
+      <button type="button" class="numpad-btn" data-num="9">9</button>
+      <button type="button" class="numpad-btn clear" data-action="clear">C</button>
+      <button type="button" class="numpad-btn" data-num="0">0</button>
+      <button type="button" class="numpad-btn submit" data-action="submit">OK</button>
+    </div>
+    <div class="feedback-overlay" id="feedback-overlay"></div>
+  </div>
+</div>
+
+<!-- Results Screen -->
+<div id="results-screen" class="hidden">
+  <h1>Results</h1>
+  <div class="results-stats" id="results-stats"></div>
+  <div class="weakness-section" id="weakness-section"></div>
+  <button id="play-again-btn">Play Again</button>
+</div>
+
+</div><!-- .card -->
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  const state = {
+    totalTime: 120,
+    questionTime: 5,
+    totalRemaining: 0,
+    questionRemaining: 0,
+    totalInterval: null,
+    questionInterval: null,
+    correct: 0,
+    incorrect: 0,
+    currentAnswer: null,
+    currentQuestion: null,
+    isAcceptingInput: true,
+    gameOver: false,
+    history: [],
+  };
+
+  // Audio
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  function playSound(type) {
+    const now = audioCtx.currentTime;
+    const gain = audioCtx.createGain();
+    gain.connect(audioCtx.destination);
+
+    if (type === 'correct') {
+      // Happy two-tone chime: C5 → E5
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'sine';
+      o1.frequency.setValueAtTime(523, now);      // C5
+      o1.frequency.setValueAtTime(659, now + 0.12); // E5
+      o1.connect(gain);
+      o1.start(now);
+      o1.stop(now + 0.4);
+    } else if (type === 'incorrect') {
+      // Low buzzer
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'square';
+      o1.frequency.setValueAtTime(180, now);
+      o1.frequency.linearRampToValueAtTime(120, now + 0.35);
+      o1.connect(gain);
+      o1.start(now);
+      o1.stop(now + 0.35);
+    } else if (type === 'timeout') {
+      // Descending two-tone: G4 → D4
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'triangle';
+      o1.frequency.setValueAtTime(392, now);       // G4
+      o1.frequency.setValueAtTime(294, now + 0.15); // D4
+      o1.connect(gain);
+      o1.start(now);
+      o1.stop(now + 0.5);
+    } else if (type === 'gameover') {
+      // Three descending notes
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'sine';
+      o1.frequency.setValueAtTime(440, now);       // A4
+      o1.frequency.setValueAtTime(349, now + 0.2); // F4
+      o1.frequency.setValueAtTime(262, now + 0.4); // C4
+      o1.connect(gain);
+      o1.start(now);
+      o1.stop(now + 0.8);
+    }
+  }
+
+  function showScreen(id) {
+    ['start-screen', 'quiz-screen', 'results-screen'].forEach(s => {
+      $(s).classList.toggle('hidden', s !== id);
+    });
+  }
+
+  function generateQuestion() {
+    const a = Math.floor(Math.random() * 10);
+    const b = Math.floor(Math.random() * 10);
+    if (Math.random() < 0.5) {
+      return { text: `${a} + ${b} = ?`, answer: a + b, a, b, op: '+' };
+    }
+    const big = Math.max(a, b), small = Math.min(a, b);
+    return { text: `${big} \u2212 ${small} = ?`, answer: big - small, a: big, b: small, op: '\u2212' };
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m + ':' + String(sec).padStart(2, '0');
+  }
+
+  function updateTimerBar() {
+    const pct = (state.totalRemaining / state.totalTime) * 100;
+    const bar = $('timer-bar');
+    bar.style.width = pct + '%';
+    if (pct > 50) bar.style.backgroundColor = '#27ae60';
+    else if (pct > 20) bar.style.backgroundColor = '#f39c12';
+    else bar.style.backgroundColor = '#e74c3c';
+    $('total-time-display').textContent = formatTime(Math.max(0, state.totalRemaining));
+  }
+
+  function startTotalTimer() {
+    state.totalRemaining = state.totalTime;
+    updateTimerBar();
+    state.totalInterval = setInterval(() => {
+      state.totalRemaining--;
+      updateTimerBar();
+      if (state.totalRemaining <= 0) endGame();
+    }, 1000);
+  }
+
+  function startQuestionTimer() {
+    state.questionRemaining = state.questionTime;
+    $('question-timer-display').textContent = state.questionRemaining + 's';
+    state.questionInterval = setInterval(() => {
+      state.questionRemaining--;
+      $('question-timer-display').textContent = state.questionRemaining + 's';
+      if (state.questionRemaining <= 0) handleTimeout();
+    }, 1000);
+  }
+
+  function updateAnswerDisplay() {
+    const val = $('answer-input').value;
+    $('answer-display').textContent = val || '\u00A0';
+  }
+
+  function nextQuestion() {
+    if (state.gameOver) return;
+    const q = generateQuestion();
+    state.currentAnswer = q.answer;
+    state.currentQuestion = q;
+    $('question-display').textContent = q.text;
+    $('answer-input').value = '';
+    updateAnswerDisplay();
+    state.isAcceptingInput = true;
+    clearInterval(state.questionInterval);
+    startQuestionTimer();
+  }
+
+  function submitAnswer() {
+    if (!state.isAcceptingInput || state.gameOver) return;
+    state.isAcceptingInput = false;
+    clearInterval(state.questionInterval);
+    const val = parseInt($('answer-input').value, 10);
+    const q = state.currentQuestion;
+    if (!isNaN(val) && val === state.currentAnswer) {
+      state.correct++;
+      state.history.push({ ...q, result: 'correct' });
+      playSound('correct');
+      showFeedback('correct');
+    } else {
+      state.incorrect++;
+      state.history.push({ ...q, result: 'incorrect', given: val });
+      playSound('incorrect');
+      showFeedback('incorrect');
+    }
+  }
+
+  function handleTimeout() {
+    if (!state.isAcceptingInput || state.gameOver) return;
+    state.isAcceptingInput = false;
+    clearInterval(state.questionInterval);
+    state.incorrect++;
+    state.history.push({ ...state.currentQuestion, result: 'timeout' });
+    playSound('timeout');
+    showFeedback('incorrect');
+  }
+
+  function showFeedback(type) {
+    const overlay = $('feedback-overlay');
+    overlay.classList.remove('feedback-correct', 'feedback-incorrect');
+    // Force reflow to allow re-triggering of same animation class
+    void overlay.offsetWidth;
+    overlay.classList.add(type === 'correct' ? 'feedback-correct' : 'feedback-incorrect');
+    overlay.addEventListener('animationend', () => {
+      overlay.classList.remove('feedback-correct', 'feedback-incorrect');
+      nextQuestion();
+    }, { once: true });
+  }
+
+  function endGame() {
+    state.gameOver = true;
+    clearInterval(state.totalInterval);
+    clearInterval(state.questionInterval);
+    const total = state.correct + state.incorrect;
+    const pct = total > 0 ? Math.round((state.correct / total) * 100) : 0;
+    $('results-stats').innerHTML =
+      `<div class="big">${pct}%</div>` +
+      `Total: ${total}<br>` +
+      `Correct: ${state.correct}<br>` +
+      `Incorrect: ${state.incorrect}`;
+
+    // Weakness analysis
+    const missed = {};
+    state.history.forEach(h => {
+      if (h.result !== 'correct') {
+        const key = `${h.a} ${h.op} ${h.b}`;
+        missed[key] = (missed[key] || 0) + 1;
+      }
+    });
+    const sorted = Object.entries(missed).sort((a, b) => b[1] - a[1]);
+    const maxMiss = sorted.length > 0 ? sorted[0][1] : 1;
+    const section = $('weakness-section');
+
+    if (sorted.length === 0) {
+      section.innerHTML = '<h2>Weak Patterns</h2><div class="no-weakness">No mistakes — perfect!</div>';
+    } else {
+      const top = sorted.slice(0, 8);
+      section.innerHTML = '<h2>Weak Patterns</h2><ul class="weakness-list">' +
+        top.map(([q, count]) => {
+          const pctBar = Math.round((count / maxMiss) * 100);
+          return `<li class="weakness-item">
+            <span class="question-text">${q}</span>
+            <div class="weakness-bar"><div class="weakness-bar-fill" style="width:${pctBar}%"></div></div>
+            <span class="miss-count">${count}x missed</span>
+          </li>`;
+        }).join('') + '</ul>';
+    }
+
+    playSound('gameover');
+    showScreen('results-screen');
+  }
+
+  function startGame() {
+    state.totalTime = Math.max(10, parseInt($('total-time-input').value, 10) || 120);
+    state.questionTime = Math.max(1, parseInt($('question-time-input').value, 10) || 5);
+    state.correct = 0;
+    state.incorrect = 0;
+    state.history = [];
+    state.gameOver = false;
+    state.isAcceptingInput = true;
+    showScreen('quiz-screen');
+    startTotalTimer();
+    nextQuestion();
+  }
+
+  $('start-btn').addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    startGame();
+  });
+  $('play-again-btn').addEventListener('click', () => showScreen('start-screen'));
+
+  // Numpad buttons
+  document.querySelectorAll('.numpad-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!state.isAcceptingInput || state.gameOver) return;
+      const num = btn.dataset.num;
+      const action = btn.dataset.action;
+      if (num !== undefined) {
+        const input = $('answer-input');
+        if (input.value.length < 3) {
+          input.value += num;
+          updateAnswerDisplay();
+        }
+      } else if (action === 'clear') {
+        $('answer-input').value = '';
+        updateAnswerDisplay();
+      } else if (action === 'submit') {
+        submitAnswer();
+      }
+    });
+  });
+
+  // Keyboard support (still works for physical keyboards)
+  document.addEventListener('keydown', e => {
+    if ($('quiz-screen').classList.contains('hidden')) return;
+    if (!state.isAcceptingInput || state.gameOver) return;
+    if (e.key >= '0' && e.key <= '9') {
+      const input = $('answer-input');
+      if (input.value.length < 3) {
+        input.value += e.key;
+        updateAnswerDisplay();
+      }
+    } else if (e.key === 'Backspace') {
+      const input = $('answer-input');
+      input.value = input.value.slice(0, -1);
+      updateAnswerDisplay();
+    } else if (e.key === 'Enter') {
+      submitAnswer();
+    }
+  });
+</script>
+</body>
+</html>
