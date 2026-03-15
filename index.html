@@ -8,6 +8,8 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { overflow: hidden; height: 100%; }
+  img, svg, a, button { -webkit-user-drag: none; user-drag: none; draggable: false; }
+  * { -webkit-user-select: none; user-select: none; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -20,24 +22,26 @@
 
   .hidden { display: none !important; }
 
-  /* Themes */
-  body.theme-default { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); }
-  body.theme-space   { background: linear-gradient(135deg, #000428, #004e92, #000428); }
-  body.theme-ocean   { background: linear-gradient(135deg, #005c97, #0083B0, #00b4db); }
-  body.theme-jungle  { background: linear-gradient(135deg, #134e0f, #2d6a30, #1a472a); }
-  body.theme-sunset  { background: linear-gradient(135deg, #c94b4b, #e8834a, #f5af19); }
-  body.theme-candy   { background: linear-gradient(135deg, #ee9ca7, #e27baa, #ffdde1); }
+  /* Themes — soft, low-saturation, eye-friendly palettes */
+  body.theme-default { background: linear-gradient(145deg, #3b3d54, #4a4c66, #3b3d54); }
+  body.theme-space   { background: linear-gradient(145deg, #2e3a4a, #3d5068, #2e3a4a); }
+  body.theme-ocean   { background: linear-gradient(145deg, #4a7a8a, #6a9aaa, #4a7a8a); }
+  body.theme-jungle  { background: linear-gradient(145deg, #4a6a52, #5a7a62, #4a6a52); }
+  body.theme-sunset  { background: linear-gradient(145deg, #7a6a5a, #9a8a7a, #7a6a5a); }
+  body.theme-candy   { background: linear-gradient(145deg, #8a7a82, #a0909a, #8a7a82); }
 
   /* Card */
   .card {
-    width: 100%; max-width: 500px; margin: 0.5rem;
-    padding: 1.5rem 1.5rem;
+    width: 100%; max-width: 600px; margin: 0.5rem;
+    padding: 2rem 2rem;
     background: rgba(255,255,255,0.06);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.12); border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05) inset;
     text-align: center;
     max-height: 100vh; overflow-y: auto;
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
   }
 
   #start-screen, #quiz-screen, #results-screen { width: 100%; }
@@ -76,18 +80,12 @@
     position: relative; overflow: hidden;
   }
   .theme-btn.active { border-color: #fff; transform: scale(1.15); }
-  .theme-btn[data-theme="default"] { background: linear-gradient(135deg, #302b63, #24243e) !important; }
-  .theme-btn[data-theme="space"]   { background: linear-gradient(135deg, #000428, #004e92) !important; }
-  .theme-btn[data-theme="ocean"]   { background: linear-gradient(135deg, #005c97, #00b4db) !important; }
-  .theme-btn[data-theme="jungle"]  { background: linear-gradient(135deg, #134e0f, #2d6a30) !important; }
-  .theme-btn[data-theme="sunset"]  { background: linear-gradient(135deg, #c94b4b, #f5af19) !important; }
-  .theme-btn[data-theme="candy"]   { background: linear-gradient(135deg, #ee9ca7, #ffdde1) !important; }
-  .theme-locked::after {
-    content: '\1F512'; display: flex; align-items: center; justify-content: center;
-    position: absolute; inset: 0; border-radius: 50%;
-    background: rgba(0,0,0,0.6); font-size: 14px;
-  }
-  .theme-locked { cursor: not-allowed; }
+  .theme-btn[data-theme="default"] { background: linear-gradient(135deg, #4a4c66, #3b3d54) !important; }
+  .theme-btn[data-theme="space"]   { background: linear-gradient(135deg, #2e3a4a, #3d5068) !important; }
+  .theme-btn[data-theme="ocean"]   { background: linear-gradient(135deg, #4a7a8a, #6a9aaa) !important; }
+  .theme-btn[data-theme="jungle"]  { background: linear-gradient(135deg, #4a6a52, #5a7a62) !important; }
+  .theme-btn[data-theme="sunset"]  { background: linear-gradient(135deg, #7a6a5a, #9a8a7a) !important; }
+  .theme-btn[data-theme="candy"]   { background: linear-gradient(135deg, #8a7a82, #a0909a) !important; }
 
   /* Buttons */
   button {
@@ -113,6 +111,17 @@
     z-index: 10; transition: background 0.2s;
   }
   .music-toggle:active { background: rgba(255,255,255,0.2) !important; }
+  .cancel-btn {
+    position: absolute; top: 10px; left: 10px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.12);
+    font-size: 0.7rem; color: rgba(255,255,255,0.4); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0; min-height: 0; box-shadow: none;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+    z-index: 10; transition: background 0.2s;
+  }
+  .cancel-btn:active { background: rgba(255,255,255,0.15) !important; }
   .card { position: relative; }
 
   /* Best score badge */
@@ -373,13 +382,6 @@
   .trophy .icon { font-size: 1.5rem; }
   .trophy.earned { background: rgba(245,175,25,0.15); color: #f5af19; }
 
-  /* Theme unlock message */
-  .unlock-msg {
-    margin-top: 0.8rem; padding: 8px 14px; border-radius: 10px;
-    background: rgba(245,175,25,0.15); color: #f5af19;
-    font-size: 0.9rem; font-weight: 600;
-    animation: bestPulse 1.5s ease-in-out infinite alternate;
-  }
 
   /* Weakness */
   .weakness-section { margin-top: 1rem; text-align: left; }
@@ -394,13 +396,135 @@
   .weakness-bar-fill { height: 100%; background: linear-gradient(90deg,#e74c3c,#c0392b); border-radius: 3px; }
   .no-weakness { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.9rem; padding: 0.8rem 0; }
 
-  @media (max-width: 500px) {
+  /* Shape display */
+  .shape-display {
+    display: flex; align-items: center; justify-content: center;
+    margin: 0.5rem 0;
+  }
+  .shape-display svg {
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  /* Multiple choice buttons */
+  .choices {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; max-width: 320px; margin: 0.8rem auto 0;
+  }
+  .choice-btn {
+    padding: 0.7rem 0.5rem; font-size: 1.1rem; font-weight: 600; min-height: 52px;
+    border: 2px solid rgba(255,255,255,0.15); border-radius: 14px;
+    background: rgba(255,255,255,0.08) !important; color: #fff; cursor: pointer;
+    transition: background 0.12s, transform 0.1s, border-color 0.2s;
+    box-shadow: none; user-select: none; -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  @media (hover: hover) {
+    .choice-btn:hover { background: rgba(255,255,255,0.15) !important; }
+  }
+  .choice-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.2) !important; }
+  .choice-btn.correct-choice {
+    border-color: #27ae60 !important; background: rgba(39,174,96,0.2) !important;
+  }
+  .choice-btn.wrong-choice {
+    border-color: #e74c3c !important; background: rgba(231,76,60,0.2) !important;
+  }
+
+  /* Settings gear */
+  .settings-btn {
+    position: absolute; top: 10px; right: 10px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.12);
+    font-size: 1.1rem; color: rgba(255,255,255,0.5); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0; min-height: 0; box-shadow: none;
+    touch-action: manipulation; z-index: 10;
+  }
+  .settings-back-btn {
+    padding: 0.4rem 1.2rem; font-size: 0.85rem;
+    background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5); box-shadow: none; border-radius: 8px;
+    margin-top: 1rem;
+  }
+
+  /* Level up */
+  .level-up-msg {
+    display: inline-block; padding: 4px 14px; border-radius: 8px; margin: 4px 0;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: #fff; font-size: 1rem; font-weight: 700;
+    animation: bestPulse 1s ease-in-out infinite alternate;
+  }
+
+  /* Parent Dashboard */
+  .dashboard-btn {
+    margin-top: 0.8rem; padding: 0.4rem 1.2rem; font-size: 0.8rem;
+    background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5); box-shadow: none; border-radius: 8px;
+  }
+  .dash-back-btn {
+    padding: 0.4rem 1.2rem; font-size: 0.85rem;
+    background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5); box-shadow: none; border-radius: 8px;
+    margin-top: 1rem;
+  }
+  .dash-section { margin-bottom: 1.2rem; text-align: left; }
+  .dash-section h2 {
+    font-size: 0.95rem; color: rgba(255,255,255,0.55); text-align: center;
+    margin-bottom: 0.5rem; font-weight: 500;
+  }
+  .dash-summary {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    margin-bottom: 1rem;
+  }
+  .dash-stat {
+    padding: 0.6rem 0.4rem; border-radius: 10px;
+    background: rgba(255,255,255,0.05); text-align: center;
+  }
+  .dash-stat .val {
+    font-size: 1.4rem; font-weight: 700; color: #fff;
+  }
+  .dash-stat .lbl {
+    font-size: 0.65rem; color: rgba(255,255,255,0.45); margin-top: 2px;
+  }
+  .dash-chart {
+    display: flex; align-items: flex-end; gap: 3px; height: 60px;
+    padding: 0 4px; margin-bottom: 0.5rem;
+  }
+  .dash-bar {
+    flex: 1; border-radius: 3px 3px 0 0; min-width: 4px;
+    transition: height 0.3s;
+  }
+  .dash-bar.good { background: rgba(39,174,96,0.6); }
+  .dash-bar.ok { background: rgba(243,156,18,0.6); }
+  .dash-bar.bad { background: rgba(231,76,60,0.6); }
+  .dash-game-list { list-style: none; padding: 0; max-height: 200px; overflow-y: auto; }
+  .dash-game {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.4rem 0.6rem; margin-bottom: 3px; border-radius: 8px;
+    background: rgba(255,255,255,0.04); font-size: 0.8rem;
+  }
+  .dash-game .date { color: rgba(255,255,255,0.35); font-size: 0.7rem; }
+  .dash-game .info { color: rgba(255,255,255,0.6); }
+  .dash-game .score { font-weight: 600; }
+  .dash-game .score.high { color: #27ae60; }
+  .dash-game .score.mid { color: #f39c12; }
+  .dash-game .score.low { color: #e74c3c; }
+  .dash-weak-list { list-style: none; padding: 0; }
+  .dash-weak-item {
+    display: flex; align-items: center; padding: 0.35rem 0.6rem;
+    margin-bottom: 3px; border-radius: 6px; background: rgba(255,255,255,0.04); font-size: 0.8rem;
+  }
+  .dash-weak-item .q { font-weight: 600; color: #fff; min-width: 80px; }
+  .dash-weak-item .cnt { color: #e74c3c; font-weight: 600; margin-left: auto; font-size: 0.75rem; }
+  .dash-empty { text-align: center; color: rgba(255,255,255,0.3); font-size: 0.85rem; padding: 1.5rem 0; }
+
+  @media (max-width: 620px) {
     .card { padding: 1.2rem 1rem; margin: 0.3rem; }
     .question { font-size: 2rem; }
     h1 { font-size: 1.3rem; }
     .character { font-size: 2.5rem; min-height: 3rem; }
     .numpad { max-width: 260px; gap: 6px; }
     .numpad-btn { min-height: 50px; font-size: 1.4rem; }
+    .choices { max-width: 280px; }
   }
 </style>
 </head>
@@ -410,26 +534,46 @@
 
 <!-- Start Screen -->
 <div id="start-screen">
+  <button class="settings-btn" id="settings-btn" title="Settings">&#9881;</button>
   <h1>Flash Card Math Quiz</h1>
 
   <div id="best-score-display" class="best-score hidden"></div>
 
+  <div class="config-row" style="margin-bottom:0.6rem;">
+    <div class="config-item">
+      <label>Player</label>
+      <select id="player-select" style="width:150px;"></select>
+    </div>
+    <div class="config-item hidden" id="new-player-wrap">
+      <label>Name</label>
+      <input type="text" id="player-name-input" value="" placeholder="Enter name" style="width:120px; -webkit-user-select:text; user-select:text;">
+    </div>
+    <div class="config-item hidden" id="new-player-level-wrap">
+      <label>Start Level</label>
+      <select id="new-player-level" style="width:90px;">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+  </div>
+
   <div class="config-row">
     <div class="config-item">
-      <label>Total Time</label>
-      <input type="number" id="total-time-input" value="120" min="10" inputmode="numeric">
-    </div>
-    <div class="config-item">
-      <label>Per Question</label>
-      <input type="number" id="question-time-input" value="5" min="1" inputmode="numeric">
-    </div>
-    <div class="config-item">
-      <label>Difficulty</label>
-      <select id="difficulty-select">
-        <option value="easy">Easy (0-5)</option>
-        <option value="medium" selected>Medium (0-9)</option>
-        <option value="hard">Hard (x too!)</option>
+      <label>Category</label>
+      <select id="category-select">
+        <option value="math" selected>Math</option>
+        <option value="words">Words</option>
       </select>
+    </div>
+    <div class="config-item">
+      <label>Level</label>
+      <select id="difficulty-select"></select>
+    </div>
+    <div class="config-item">
+      <label>Topic</label>
+      <select id="mode-select"></select>
     </div>
   </div>
 
@@ -463,7 +607,24 @@
     </div>
   </div>
 
-  <div>
+  <button id="start-btn">Start!</button>
+  <br><button class="dashboard-btn" id="dashboard-btn">Parent Dashboard</button>
+</div>
+
+<!-- Settings Screen -->
+<div id="settings-screen" class="hidden">
+  <h1>Settings</h1>
+  <div class="config-row">
+    <div class="config-item">
+      <label>Total Time (sec)</label>
+      <input type="number" id="total-time-input" value="" placeholder="auto" min="10" inputmode="numeric">
+    </div>
+    <div class="config-item">
+      <label>Per Question (sec)</label>
+      <input type="number" id="question-time-input" value="" placeholder="auto" min="1" inputmode="numeric">
+    </div>
+  </div>
+  <div style="margin-top:0.8rem;">
     <label style="font-size:0.8rem; color:rgba(255,255,255,0.5); margin-bottom:6px; display:block;">Theme</label>
     <div class="theme-selector" id="theme-selector">
       <button class="theme-btn active" data-theme="default" title="Default"></button>
@@ -474,12 +635,44 @@
       <button class="theme-btn" data-theme="candy" title="Candy"></button>
     </div>
   </div>
+  <div style="margin-top:0.8rem;">
+    <label style="font-size:0.8rem; color:rgba(255,255,255,0.5); margin-bottom:6px; display:block;">Pass Threshold: <span id="threshold-display">95</span>%</label>
+    <input type="range" id="threshold-input" min="50" max="100" value="95" style="width:80%; accent-color:#667eea;">
+  </div>
+  <button class="settings-back-btn" id="settings-back-btn">Done</button>
+</div>
 
-  <button id="start-btn">Start!</button>
+<!-- Dashboard Screen -->
+<div id="dashboard-screen" class="hidden">
+  <h1>Parent Dashboard</h1>
+  <div class="config-row" style="margin-bottom:0.8rem;">
+    <div class="config-item">
+      <label>Player</label>
+      <select id="dash-player-select" style="width:150px;"></select>
+    </div>
+  </div>
+  <div class="dash-section">
+    <h2>Overall Stats</h2>
+    <div class="dash-summary" id="dash-summary"></div>
+  </div>
+  <div class="dash-section">
+    <h2>Accuracy Trend (last 20 games)</h2>
+    <div class="dash-chart" id="dash-chart"></div>
+  </div>
+  <div class="dash-section">
+    <h2>Weak Patterns (across all games)</h2>
+    <div id="dash-weak"></div>
+  </div>
+  <div class="dash-section">
+    <h2>Recent Games</h2>
+    <ul class="dash-game-list" id="dash-games"></ul>
+  </div>
+  <button class="dash-back-btn" id="dash-back-btn">Back</button>
 </div>
 
 <!-- Quiz Screen -->
 <div id="quiz-screen" class="hidden">
+  <button class="cancel-btn" id="cancel-btn" title="Quit">&#10005;</button>
   <button class="music-toggle" id="music-toggle" title="Toggle Music">&#127925;</button>
   <div class="quiz-top">
     <span id="total-time-display"></span>
@@ -494,10 +687,12 @@
     <div class="character" id="character">&#128049;</div><!-- 🐱 Kitty -->
     <div class="question" id="question-display"></div>
     <div class="question-timer" id="question-timer-display"></div>
+    <div class="shape-display hidden" id="shape-display"></div>
     <div class="answer-display" id="answer-display">&nbsp;</div>
     <div class="correct-answer-display" id="correct-answer-display"></div>
     <input type="hidden" id="answer-input">
-    <div class="numpad">
+    <div class="choices hidden" id="choices"></div>
+    <div class="numpad" id="numpad">
       <button type="button" class="numpad-btn" data-num="1">1</button>
       <button type="button" class="numpad-btn" data-num="2">2</button>
       <button type="button" class="numpad-btn" data-num="3">3</button>
@@ -509,7 +704,9 @@
       <button type="button" class="numpad-btn" data-num="9">9</button>
       <button type="button" class="numpad-btn clear" data-action="clear">C</button>
       <button type="button" class="numpad-btn" data-num="0">0</button>
-      <button type="button" class="numpad-btn submit" data-action="submit">OK</button>
+      <button type="button" class="numpad-btn" data-action="dot" style="font-size:1.8rem">.</button>
+      <button type="button" class="numpad-btn" data-action="sign" style="font-size:1rem">+/&minus;</button>
+      <button type="button" class="numpad-btn submit" data-action="submit" style="grid-column:2/-1">OK</button>
     </div>
     <div class="feedback-overlay" id="feedback-overlay"></div>
   </div>
@@ -520,7 +717,6 @@
   <h1>Results</h1>
   <div class="results-stats" id="results-stats"></div>
   <div class="trophies" id="trophies"></div>
-  <div id="unlock-msg"></div>
   <div class="weakness-section" id="weakness-section"></div>
   <div style="margin-top:1rem;">
     <button id="play-again-btn">Play Again</button>
@@ -535,19 +731,56 @@
   // Persistent data
   const saved = JSON.parse(localStorage.getItem('flashmath') || '{}');
   if (!saved.bestScore) saved.bestScore = {};
-  if (!saved.unlockedThemes) saved.unlockedThemes = ['default'];
   if (!saved.theme) saved.theme = 'default';
   if (!saved.gamesPlayed) saved.gamesPlayed = 0;
+  if (!saved.gameHistory) saved.gameHistory = [];
+  if (!saved.lastPlayer) saved.lastPlayer = '';
+  if (!saved.playerLevels) saved.playerLevels = {}; // { "name": { math: 3, words: 2 } }
+  if (!saved.playerPassedTopics) saved.playerPassedTopics = {}; // { "name": { "math-1": ["add-5"], ... } }
+  const PASS_THRESHOLD = 95; // % accuracy to unlock next level
   function persist() { localStorage.setItem('flashmath', JSON.stringify(saved)); }
 
+  function getPlayerMaxLevel(player, category) {
+    const pl = saved.playerLevels[player];
+    if (!pl) return 1;
+    return pl[category] || 1;
+  }
+  function setPlayerMaxLevel(player, category, level) {
+    if (!saved.playerLevels[player]) saved.playerLevels[player] = {};
+    saved.playerLevels[player][category] = level;
+    persist();
+  }
+  function getPassedTopics(player, category, level) {
+    const key = category + '-' + level;
+    if (!saved.playerPassedTopics[player]) return [];
+    return saved.playerPassedTopics[player][key] || [];
+  }
+  function markTopicPassed(player, category, level, topic) {
+    if (!saved.playerPassedTopics[player]) saved.playerPassedTopics[player] = {};
+    const key = category + '-' + level;
+    if (!saved.playerPassedTopics[player][key]) saved.playerPassedTopics[player][key] = [];
+    if (!saved.playerPassedTopics[player][key].includes(topic)) {
+      saved.playerPassedTopics[player][key].push(topic);
+    }
+    persist();
+  }
+  function allTopicsPassed(player, category, level) {
+    const topicMap = category === 'words' ? WORD_TOPICS : GRADE_TOPICS;
+    const topics = topicMap[level];
+    if (!topics) return false;
+    const passed = getPassedTopics(player, category, level);
+    return topics.every(t => passed.includes(t.value));
+  }
+
   const state = {
-    totalTime: 120, questionTime: 5, difficulty: 'medium',
+    totalTime: 60, questionTime: 5, grade: 2,
     totalRemaining: 0, questionRemaining: 0,
     totalInterval: null, questionInterval: null,
     correct: 0, incorrect: 0, combo: 0, maxCombo: 0, stars: 0,
     currentAnswer: null, currentQuestion: null,
     isAcceptingInput: true, gameOver: false,
     history: [], questionCount: 0,
+    mode: 'math', questionType: 'math',
     // Character
     charIdle: '&#128049;', charHappy: '&#128571;', charSad: '&#128568;',
   };
@@ -768,23 +1001,8 @@
       b.classList.toggle('active', b.dataset.theme === name);
     });
   }
-  function updateThemeButtons() {
-    document.querySelectorAll('.theme-btn').forEach(b => {
-      const t = b.dataset.theme;
-      if (saved.unlockedThemes.includes(t)) {
-        b.classList.remove('theme-locked');
-        b.disabled = false;
-        b.title = t.charAt(0).toUpperCase() + t.slice(1);
-      } else {
-        b.classList.add('theme-locked');
-        b.disabled = true;
-        b.title = 'Locked';
-      }
-    });
-  }
   document.querySelectorAll('.theme-btn').forEach(b => {
     b.addEventListener('click', () => {
-      if (b.classList.contains('theme-locked')) return;
       saved.theme = b.dataset.theme;
       persist();
       applyTheme(saved.theme);
@@ -804,29 +1022,724 @@
 
   // Screens
   function showScreen(id) {
-    ['start-screen', 'quiz-screen', 'results-screen'].forEach(s => {
+    ['start-screen', 'quiz-screen', 'results-screen', 'dashboard-screen', 'settings-screen'].forEach(s => {
       $(s).classList.toggle('hidden', s !== id);
     });
   }
 
-  // Question generation
-  function generateQuestion() {
-    const diff = state.difficulty;
-    const max = diff === 'easy' ? 6 : 10;
-    const a = Math.floor(Math.random() * max);
-    const b = Math.floor(Math.random() * max);
+  // Question generators by topic
+  function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-    if (diff === 'hard' && Math.random() < 0.33) {
-      // multiplication
-      const ma = Math.floor(Math.random() * 10);
-      const mb = Math.floor(Math.random() * 10);
-      return { text: `${ma} \u00D7 ${mb} = ?`, answer: ma * mb, a: ma, b: mb, op: '\u00D7' };
-    }
-    if (Math.random() < 0.5) {
+  const TOPIC_GENERATORS = {
+    // === Level 1 (old 1-2) ===
+    'add-10': () => {
+      const a = rnd(0, 10), b = rnd(0, 10 - a);
       return { text: `${a} + ${b} = ?`, answer: a + b, a, b, op: '+' };
+    },
+    'sub-10': () => {
+      const big = rnd(1, 10), small = rnd(0, big);
+      return { text: `${big} \u2212 ${small} = ?`, answer: big - small, a: big, b: small, op: '\u2212' };
+    },
+    // === Level 2 (old 3-4) ===
+    'add-100': () => {
+      const a = rnd(1, 99), b = rnd(1, 100 - a);
+      return { text: `${a} + ${b} = ?`, answer: a + b, a, b, op: '+' };
+    },
+    'sub-100': () => {
+      const big = rnd(10, 99), small = rnd(1, big);
+      return { text: `${big} \u2212 ${small} = ?`, answer: big - small, a: big, b: small, op: '\u2212' };
+    },
+    // === Level 3 (old 5-6) ===
+    'mul-9': () => {
+      const a = rnd(2, 9), b = rnd(2, 9);
+      return { text: `${a} \u00D7 ${b} = ?`, answer: a * b, a, b, op: '\u00D7' };
+    },
+    'div-basic': () => {
+      const a = rnd(2, 9), b = rnd(1, 9), product = a * b;
+      return { text: `${product} \u00F7 ${a} = ?`, answer: b, a: product, b: a, op: '\u00F7' };
+    },
+    // === Level 4 (old 7-8) ===
+    'mul-12': () => {
+      const a = rnd(2, 12), b = rnd(2, 12);
+      return { text: `${a} \u00D7 ${b} = ?`, answer: a * b, a, b, op: '\u00D7' };
+    },
+    'div-12': () => {
+      const a = rnd(2, 12), b = rnd(2, 12), product = a * b;
+      return { text: `${product} \u00F7 ${a} = ?`, answer: b, a: product, b: a, op: '\u00F7' };
+    },
+    'fractions': () => {
+      const denom = [2, 4, 5, 10][rnd(0, 3)];
+      const numer = rnd(1, denom - 1);
+      const whole = denom * rnd(1, 5);
+      const answer = (numer / denom) * whole;
+      return { text: `${numer}/${denom} of ${whole} = ?`, answer, a: numer, b: whole, op: 'frac' };
+    },
+    'exponents': () => {
+      const a = rnd(2, 9), exp = rnd(2, 3);
+      const answer = Math.pow(a, exp);
+      const sup = exp === 2 ? '\u00B2' : '\u00B3';
+      return { text: `${a}${sup} = ?`, answer, a, b: exp, op: '^' };
+    },
+    // === Level 5 (old 9-10) ===
+    'negative': () => {
+      const a = rnd(1, 50), b = rnd(1, 50);
+      return { text: `${a} \u2212 ${b} = ?`, answer: a - b, a, b, op: '\u2212' };
+    },
+    'order-ops': () => {
+      if (Math.random() < 0.5) {
+        const b = rnd(2, 9), c = rnd(2, 9), a = rnd(1, 20);
+        return { text: `${a} + ${b} \u00D7 ${c} = ?`, answer: a + b * c, a, b, op: 'order' };
+      }
+      const a = rnd(2, 9), b = rnd(2, 9), c = rnd(1, 20);
+      return { text: `${a} \u00D7 ${b} + ${c} = ?`, answer: a * b + c, a, b, op: 'order' };
+    },
+    'decimals': () => {
+      const a = rnd(1, 99) / 10, b = rnd(1, 99) / 10;
+      if (Math.random() < 0.5) {
+        return { text: `${a.toFixed(1)} + ${b.toFixed(1)} = ?`, answer: Math.round((a + b) * 10) / 10, a, b, op: '+d' };
+      }
+      const big = Math.max(a, b), small = Math.min(a, b);
+      return { text: `${big.toFixed(1)} \u2212 ${small.toFixed(1)} = ?`, answer: Math.round((big - small) * 10) / 10, a: big, b: small, op: '\u2212d' };
+    },
+    'percentages': () => {
+      const pct = [10, 20, 25, 50, 75][rnd(0, 4)];
+      const whole = rnd(2, 20) * (100 / pct);
+      return { text: `${pct}% of ${whole} = ?`, answer: (pct / 100) * whole, a: pct, b: whole, op: '%' };
+    },
+    // === Level 6 (NEW) ===
+    'multi-step': () => {
+      const a = rnd(2, 9), b = rnd(2, 9), c = rnd(2, 9), d = rnd(1, 15);
+      const answer = a * b + c * d;
+      return { text: `${a}\u00D7${b} + ${c}\u00D7${d} = ?`, answer, a, b, op: 'multi' };
+    },
+    'sqrt': () => {
+      const vals = [4,9,16,25,36,49,64,81,100,121,144,169,196,225];
+      const n = vals[rnd(0, vals.length - 1)];
+      return { text: `\u221A${n} = ?`, answer: Math.sqrt(n), a: n, b: 0, op: '\u221A' };
+    },
+    'neg-multiply': () => {
+      const a = rnd(2, 12), b = rnd(2, 12);
+      const neg = Math.random() < 0.5;
+      if (neg) return { text: `-${a} \u00D7 ${b} = ?`, answer: -a * b, a: -a, b, op: '\u00D7' };
+      return { text: `${a} \u00D7 -${b} = ?`, answer: a * -b, a, b: -b, op: '\u00D7' };
+    },
+    // === Level 7 (NEW) ===
+    'decimal-mul': () => {
+      const a = rnd(1, 99) / 10, b = rnd(2, 9);
+      const answer = Math.round(a * b * 10) / 10;
+      return { text: `${a.toFixed(1)} \u00D7 ${b} = ?`, answer, a, b, op: '\u00D7d' };
+    },
+    'frac-add': () => {
+      // fractions with common denominators: a/d + b/d
+      const d = [2,3,4,5,6,8,10][rnd(0, 6)];
+      const a = rnd(1, d - 1), b = rnd(1, d - 1);
+      const sum = a + b;
+      const answer = Math.round((sum / d) * 100) / 100;
+      return { text: `${a}/${d} + ${b}/${d} = ? (decimal)`, answer, a, b, op: 'frac+' };
+    },
+    'pow10': () => {
+      const a = rnd(1, 99) / 10;
+      const mul = [10, 100, 1000][rnd(0, 2)];
+      const answer = a * mul;
+      return { text: `${a.toFixed(1)} \u00D7 ${mul} = ?`, answer, a, b: mul, op: '\u00D710' };
+    },
+    // === Level 8 (NEW) ===
+    'gcd': () => {
+      const primes = [2,3,5,7];
+      const g = primes[rnd(0, 3)] * rnd(1, 3);
+      const a = g * rnd(2, 6), b = g * rnd(2, 6);
+      // Euclidean GCD
+      function gcd(x, y) { while (y) { [x, y] = [y, x % y]; } return x; }
+      const answer = gcd(a, b);
+      return { text: `GCD(${a}, ${b}) = ?`, answer, a, b, op: 'gcd' };
+    },
+    'lcm': () => {
+      const a = rnd(2, 12), b = rnd(2, 12);
+      function gcd(x, y) { while (y) { [x, y] = [y, x % y]; } return x; }
+      const answer = (a * b) / gcd(a, b);
+      return { text: `LCM(${a}, ${b}) = ?`, answer, a, b, op: 'lcm' };
+    },
+    'algebra': () => {
+      // ax + b = c, solve for x
+      const x = rnd(1, 15);
+      const a = rnd(2, 9);
+      const b = rnd(1, 20);
+      const c = a * x + b;
+      return { text: `${a}x + ${b} = ${c}, x = ?`, answer: x, a: c, b: a, op: 'algebra' };
+    },
+    // === Level 9 (NEW) ===
+    'unit-convert': () => {
+      const conversions = [
+        { q: (v) => `${v} km = ? m`, mul: 1000, unit: 'km\u2192m' },
+        { q: (v) => `${v} m = ? cm`, mul: 100, unit: 'm\u2192cm' },
+        { q: (v) => `${v} kg = ? g`, mul: 1000, unit: 'kg\u2192g' },
+        { q: (v) => `${v} L = ? mL`, mul: 1000, unit: 'L\u2192mL' },
+        { q: (v) => `${v} hr = ? min`, mul: 60, unit: 'hr\u2192min' },
+        { q: (v) => `${v} min = ? sec`, mul: 60, unit: 'min\u2192sec' },
+      ];
+      const c = conversions[rnd(0, conversions.length - 1)];
+      const v = rnd(1, 20);
+      return { text: c.q(v), answer: v * c.mul, a: v, b: c.mul, op: 'unit' };
+    },
+    'ratio': () => {
+      const a = rnd(2, 10), b = rnd(2, 10), mul = rnd(2, 5);
+      return { text: `${a}:${b} = ${a * mul}:?`, answer: b * mul, a, b, op: 'ratio' };
+    },
+    'algebra2': () => {
+      // ax - b = c, solve for x
+      const x = rnd(2, 15);
+      const a = rnd(2, 9);
+      const b = rnd(1, a * x - 1);
+      const c = a * x - b;
+      return { text: `${a}x \u2212 ${b} = ${c}, x = ?`, answer: x, a: c, b: a, op: 'algebra' };
+    },
+    // === Level 10 (NEW — hardest) ===
+    'multi-step-hard': () => {
+      const a = rnd(2, 12), b = rnd(2, 12), c = rnd(2, 9), d = rnd(2, 9);
+      const answer = a * b - c * d;
+      return { text: `${a}\u00D7${b} \u2212 ${c}\u00D7${d} = ?`, answer, a, b, op: 'multi' };
+    },
+    'algebra3': () => {
+      // (ax + b) / c = d, solve for x
+      const x = rnd(1, 10);
+      const a = rnd(2, 5);
+      const c = rnd(2, 5);
+      const b = rnd(1, 10);
+      const d = (a * x + b) / c;
+      if (d !== Math.floor(d)) return TOPIC_GENERATORS['algebra']();
+      return { text: `(${a}x + ${b}) \u00F7 ${c} = ${d}, x = ?`, answer: x, a: d, b: a, op: 'algebra' };
+    },
+    'neg-ops': () => {
+      const a = rnd(-20, 20), b = rnd(-20, 20);
+      if (Math.random() < 0.5) {
+        return { text: `(${a}) + (${b}) = ?`, answer: a + b, a, b, op: '+neg' };
+      }
+      return { text: `(${a}) \u00D7 (${b}) = ?`, answer: a * b, a, b, op: '\u00D7neg' };
+    },
+    'frac-add-diff': () => {
+      // Add fractions with different denominators: a/b + c/d
+      const denoms = [2,3,4,5,6,8,10,12,15,20];
+      const d1 = denoms[rnd(0, denoms.length - 1)];
+      const d2 = denoms.filter(d => d !== d1)[rnd(0, denoms.length - 2)];
+      const n1 = rnd(1, d1 - 1), n2 = rnd(1, d2 - 1);
+      const answer = Math.round((n1 / d1 + n2 / d2) * 1000) / 1000;
+      return { text: `${n1}/${d1} + ${n2}/${d2} = ? (decimal)`, answer, a: n1, b: n2, op: 'frac+d' };
+    },
+    'simplify': () => {
+      // Simplify: a(bx + c) + d(ex + f)
+      const a = rnd(1, 5), b = rnd(1, 4), c = rnd(1, 9);
+      const d = rnd(-5, -1), e = rnd(1, 4), f = rnd(-9, 9);
+      const xCoeff = a * b + d * e;
+      const constant = a * c + d * f;
+      const dStr = d < 0 ? `\u2212 ${-d}` : `+ ${d}`;
+      const fStr = f >= 0 ? `+ ${f}` : `\u2212 ${-f}`;
+      const text = `${a}(${b}x + ${c}) ${dStr}(${e}x ${fStr}) = ?x + ?`;
+      // Answer is the x coefficient (we ask for just that)
+      return { text: `${a}(${b}x+${c}) ${dStr}(${e}x${f >= 0 ? '+' : ''}${f})\nx coefficient = ?`, answer: xCoeff, a: xCoeff, b: constant, op: 'simplify' };
+    },
+    'area-rect': () => {
+      const w = rnd(2, 20), h = rnd(2, 20);
+      if (Math.random() < 0.5) {
+        return { text: `Rectangle ${w}\u00D7${h}\nArea = ?`, answer: w * h, a: w, b: h, op: 'area' };
+      }
+      return { text: `Rectangle ${w}\u00D7${h}\nPerimeter = ?`, answer: 2 * (w + h), a: w, b: h, op: 'perim' };
+    },
+    'area-triangle': () => {
+      const b = rnd(2, 20) * 2, h = rnd(2, 15); // even base for clean area
+      return { text: `Triangle base=${b} height=${h}\nArea = ?`, answer: (b * h) / 2, a: b, b: h, op: 'area' };
+    },
+    'area-circle': () => {
+      const r = rnd(1, 10);
+      const answer = Math.round(3.14 * r * r * 100) / 100;
+      return { text: `Circle r=${r}\nArea = ? (\u03C0\u22483.14)`, answer, a: r, b: 0, op: 'area' };
+    },
+    'composite-shape': () => {
+      const shapes = [
+        // Square with square hole
+        () => {
+          const outer = rnd(6, 12), inner = rnd(2, outer - 2);
+          const area = outer * outer - inner * inner;
+          const svg = `<rect x="10" y="10" width="80" height="80" fill="#45b7d1" stroke="#fff" stroke-width="2"/>` +
+            `<rect x="${10 + (80 - inner * 80 / outer) / 2}" y="${10 + (80 - inner * 80 / outer) / 2}" width="${inner * 80 / outer}" height="${inner * 80 / outer}" fill="#2b2d42" stroke="#fff" stroke-width="1.5"/>` +
+            `<text x="50" y="103" fill="#fff" font-size="9" text-anchor="middle">${outer}</text>` +
+            `<text x="50" y="55" fill="#fff" font-size="8" text-anchor="middle">${inner}</text>`;
+          return { svg, text: 'Shaded area = ?', answer: area };
+        },
+        // Rectangle + triangle on top (house shape)
+        () => {
+          const w = rnd(4, 10), h = rnd(3, 8), th = rnd(2, 5);
+          const area = w * h + (w * th) / 2;
+          const svg = `<rect x="15" y="50" width="70" height="45" fill="#96ceb4" stroke="#fff" stroke-width="2"/>` +
+            `<polygon points="15,50 50,${50 - th * 9} 85,50" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>` +
+            `<text x="50" y="103" fill="#fff" font-size="9" text-anchor="middle">${w}</text>` +
+            `<text x="7" y="75" fill="#fff" font-size="8" text-anchor="middle">${h}</text>` +
+            `<text x="50" y="${48 - th * 5}" fill="#fff" font-size="8" text-anchor="middle">${th}</text>`;
+          return { svg, text: 'Total area = ?', answer: area };
+        },
+        // L-shape (two rectangles)
+        () => {
+          const w1 = rnd(3, 6), h1 = rnd(5, 9), w2 = rnd(3, 6), h2 = rnd(3, 5);
+          const area = w1 * h1 + w2 * h2;
+          const svg = `<rect x="10" y="10" width="35" height="80" fill="#a78bfa" stroke="#fff" stroke-width="2"/>` +
+            `<rect x="45" y="50" width="40" height="40" fill="#a78bfa" stroke="#fff" stroke-width="2"/>` +
+            `<text x="28" y="103" fill="#fff" font-size="8" text-anchor="middle">${w1}</text>` +
+            `<text x="5" y="55" fill="#fff" font-size="8" text-anchor="middle">${h1}</text>` +
+            `<text x="65" y="47" fill="#fff" font-size="8" text-anchor="middle">${w2}</text>` +
+            `<text x="90" y="75" fill="#fff" font-size="8" text-anchor="middle">${h2}</text>`;
+          return { svg, text: 'Total area = ?', answer: area };
+        },
+      ];
+      const shape = shapes[rnd(0, shapes.length - 1)]();
+      return {
+        type: 'shape', // uses SVG display + numpad
+        text: shape.text,
+        svg: shape.svg,
+        answer: shape.answer,
+        a: shape.answer, b: 0, op: 'comp-area',
+        useNumpad: true,
+      };
+    },
+    'mixed': () => {
+      const keys = Object.keys(TOPIC_GENERATORS).filter(k => k !== 'mixed' && !k.startsWith('shapes'));
+      return TOPIC_GENERATORS[keys[rnd(0, keys.length - 1)]]();
+    },
+  };
+
+  // Topics available per level
+  const GRADE_TOPICS = {
+    1: [
+      { value: 'add-10', label: 'Addition (0-10)' },
+      { value: 'sub-10', label: 'Subtraction (0-10)' },
+      { value: 'shapes', label: 'Shapes (2D)' },
+    ],
+    2: [
+      { value: 'add-100', label: 'Addition (0-100)' },
+      { value: 'sub-100', label: 'Subtraction (0-100)' },
+      { value: 'shapes-3d', label: 'Shapes (3D)' },
+    ],
+    3: [
+      { value: 'mul-9', label: 'Multiply (1-9)' },
+      { value: 'div-basic', label: 'Division (basic)' },
+    ],
+    4: [
+      { value: 'mul-12', label: 'Multiply (1-12)' },
+      { value: 'div-12', label: 'Division (1-12)' },
+      { value: 'fractions', label: 'Fractions' },
+      { value: 'exponents', label: 'Exponents' },
+    ],
+    5: [
+      { value: 'negative', label: 'Negatives' },
+      { value: 'order-ops', label: 'Order of Ops' },
+      { value: 'decimals', label: 'Decimals' },
+      { value: 'percentages', label: 'Percentages' },
+    ],
+    6: [
+      { value: 'multi-step', label: 'Multi-Step' },
+      { value: 'sqrt', label: 'Square Roots' },
+      { value: 'neg-multiply', label: 'Neg Multiply' },
+    ],
+    7: [
+      { value: 'decimal-mul', label: 'Decimal Multiply' },
+      { value: 'frac-add', label: 'Fraction Add' },
+      { value: 'pow10', label: 'Powers of 10' },
+    ],
+    8: [
+      { value: 'gcd', label: 'GCD' },
+      { value: 'lcm', label: 'LCM' },
+      { value: 'algebra', label: 'Algebra (basic)' },
+      { value: 'area-rect', label: 'Area & Perimeter' },
+    ],
+    9: [
+      { value: 'unit-convert', label: 'Unit Conversion' },
+      { value: 'ratio', label: 'Ratio' },
+      { value: 'algebra2', label: 'Algebra (harder)' },
+      { value: 'frac-add-diff', label: 'Fraction Add' },
+      { value: 'area-triangle', label: 'Triangle Area' },
+      { value: 'composite-shape', label: 'Composite Shapes' },
+    ],
+    10: [
+      { value: 'simplify', label: 'Simplify' },
+      { value: 'composite-shape', label: 'Composite Shapes' },
+      { value: 'algebra3', label: 'Algebra (advanced)' },
+      { value: 'neg-ops', label: 'Negative Ops' },
+      { value: 'area-circle', label: 'Circle Area' },
+      { value: 'mixed', label: 'Mixed Challenge' },
+    ],
+  };
+
+  // === WORD QUESTION DATA ===
+  const SIGHT_WORDS = {
+    easy: ['the','and','is','it','to','in','he','was','for','on','are','but','not','you','all','can','her','had','one','our'],
+    hard: ['because','through','different','thought','important','another','between','should','before','against'],
+  };
+
+  const RHYME_PAIRS = [
+    ['cat','hat','bat','mat','rat','sat'],
+    ['dog','log','fog','hog','jog','bog'],
+    ['sun','fun','run','bun','gun','nun'],
+    ['bed','red','fed','led','wed','said'],
+    ['cake','lake','make','take','bake','wake'],
+    ['ball','call','fall','hall','tall','wall'],
+    ['ring','sing','king','wing','thing','bring'],
+    ['boat','coat','goat','note','vote','wrote'],
+    ['tree','free','see','bee','key','three'],
+    ['night','light','right','sight','tight','might'],
+    ['rain','train','brain','chain','plain','main'],
+    ['book','cook','look','hook','took','shook'],
+  ];
+
+  const ANTONYM_PAIRS = [
+    ['hot','cold'],['big','small'],['fast','slow'],['happy','sad'],['up','down'],
+    ['left','right'],['day','night'],['old','new'],['tall','short'],['hard','soft'],
+    ['light','dark'],['open','close'],['full','empty'],['wet','dry'],['loud','quiet'],
+    ['strong','weak'],['rich','poor'],['clean','dirty'],['early','late'],['safe','dangerous'],
+    ['brave','afraid'],['push','pull'],['buy','sell'],['win','lose'],['love','hate'],
+    ['begin','end'],['always','never'],['accept','refuse'],['arrive','depart'],['borrow','lend'],
+  ];
+
+  const SYNONYM_PAIRS = [
+    ['big','large'],['small','tiny'],['happy','glad'],['sad','unhappy'],['fast','quick'],
+    ['smart','clever'],['pretty','beautiful'],['angry','mad'],['scared','afraid'],['start','begin'],
+    ['end','finish'],['look','see'],['run','sprint'],['talk','speak'],['want','wish'],
+    ['hard','difficult'],['easy','simple'],['loud','noisy'],['quiet','silent'],['nice','kind'],
+    ['funny','hilarious'],['odd','strange'],['huge','enormous'],['sleepy','drowsy'],['fix','repair'],
+  ];
+
+  const VOCAB_WORDS = [
+    { word: 'enormous', meaning: 'Very big', wrong: ['Very small','Very fast','Very loud'] },
+    { word: 'ancient', meaning: 'Very old', wrong: ['Very new','Very tall','Very cold'] },
+    { word: 'fragile', meaning: 'Easily broken', wrong: ['Very strong','Very heavy','Very fast'] },
+    { word: 'generous', meaning: 'Giving freely', wrong: ['Taking a lot','Being mean','Being lazy'] },
+    { word: 'curious', meaning: 'Wanting to know', wrong: ['Not caring','Being sleepy','Being angry'] },
+    { word: 'brilliant', meaning: 'Very smart', wrong: ['Very dull','Very slow','Very weak'] },
+    { word: 'fierce', meaning: 'Very strong or wild', wrong: ['Very gentle','Very quiet','Very tiny'] },
+    { word: 'peculiar', meaning: 'Strange or odd', wrong: ['Very normal','Very plain','Very common'] },
+    { word: 'elegant', meaning: 'Graceful and stylish', wrong: ['Messy and rough','Loud and wild','Short and wide'] },
+    { word: 'vanish', meaning: 'Disappear', wrong: ['Appear','Grow bigger','Stay still'] },
+    { word: 'predict', meaning: 'Guess what will happen', wrong: ['Forget the past','Stay quiet','Run away'] },
+    { word: 'swift', meaning: 'Moving very fast', wrong: ['Moving slowly','Standing still','Very heavy'] },
+    { word: 'feast', meaning: 'A large meal', wrong: ['A small snack','A short nap','A long walk'] },
+    { word: 'sturdy', meaning: 'Strong and solid', wrong: ['Weak and thin','Soft and light','Tiny and flat'] },
+    { word: 'cautious', meaning: 'Being very careful', wrong: ['Being careless','Being noisy','Being silly'] },
+  ];
+
+  const MISSING_LETTER_WORDS = [
+    'cat','dog','sun','hat','bed','cup','pig','fox','bug','hen',
+    'fish','bird','tree','book','frog','ship','star','milk','ring','cake',
+    'apple','happy','water','candy','tiger','house','dance','dream','smile','cloud',
+    'garden','purple','monkey','castle','silver','window','family','kitchen','special','holiday',
+  ];
+
+  const SCRAMBLE_WORDS = [
+    'cat','dog','sun','hat','cup','pig','fox','bug','hen','bed',
+    'fish','bird','tree','book','frog','star','milk','ring','cake','ship',
+    'apple','water','candy','tiger','house','dance','smile','cloud','happy','dream',
+    'garden','monkey','castle','silver','window','family','purple','kitchen','special','bridge',
+  ];
+
+  // Word question generators
+  function pickRandom(arr) { return arr[rnd(0, arr.length - 1)]; }
+  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+  const WORD_GENERATORS = {
+    'rhyming': () => {
+      const group = pickRandom(RHYME_PAIRS);
+      const target = pickRandom(group);
+      const correct = pickRandom(group.filter(w => w !== target));
+      // 3 wrong answers from other groups
+      const wrongPool = RHYME_PAIRS.filter(g => g !== group).map(g => pickRandom(g));
+      const wrong = shuffle(wrongPool).slice(0, 3);
+      const choices = shuffle([correct, ...wrong]);
+      return { type: 'word', text: `What rhymes with "${target.toUpperCase()}"?`, answer: correct, choices, a: target, b: correct, op: 'rhyme' };
+    },
+    'antonyms': () => {
+      const pair = pickRandom(ANTONYM_PAIRS);
+      const flip = Math.random() < 0.5;
+      const word = flip ? pair[0] : pair[1];
+      const correct = flip ? pair[1] : pair[0];
+      const wrongPool = ANTONYM_PAIRS.filter(p => p !== pair).map(p => pickRandom(p));
+      const wrong = shuffle(wrongPool).slice(0, 3);
+      const choices = shuffle([correct, ...wrong]);
+      return { type: 'word', text: `Opposite of "${word.toUpperCase()}"?`, answer: correct, choices, a: word, b: correct, op: 'antonym' };
+    },
+    'synonyms': () => {
+      const pair = pickRandom(SYNONYM_PAIRS);
+      const flip = Math.random() < 0.5;
+      const word = flip ? pair[0] : pair[1];
+      const correct = flip ? pair[1] : pair[0];
+      const wrongPool = SYNONYM_PAIRS.filter(p => p !== pair).map(p => pickRandom(p));
+      const wrong = shuffle(wrongPool).slice(0, 3);
+      const choices = shuffle([correct, ...wrong]);
+      return { type: 'word', text: `Same as "${word.toUpperCase()}"?`, answer: correct, choices, a: word, b: correct, op: 'synonym' };
+    },
+    'missing-letter': () => {
+      const level = state.grade;
+      const pool = level <= 3 ? MISSING_LETTER_WORDS.slice(0, 10) :
+                   level <= 5 ? MISSING_LETTER_WORDS.slice(0, 20) :
+                   MISSING_LETTER_WORDS;
+      const word = pickRandom(pool);
+      const idx = rnd(0, word.length - 1);
+      const missing = word[idx];
+      const display = word.slice(0, idx) + ' _ ' + word.slice(idx + 1);
+      // Wrong letters
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('').filter(c => c !== missing);
+      const wrong = shuffle(alphabet).slice(0, 3);
+      const choices = shuffle([missing, ...wrong]);
+      return { type: 'word', text: display.toUpperCase(), answer: missing, choices: choices.map(c => c.toUpperCase()), a: word, b: missing, op: 'missing' };
+    },
+    'spelling': () => {
+      const level = state.grade;
+      const pool = level <= 3 ? MISSING_LETTER_WORDS.slice(0, 10) :
+                   level <= 5 ? MISSING_LETTER_WORDS.slice(0, 20) :
+                   MISSING_LETTER_WORDS;
+      const correct = pickRandom(pool);
+      // Generate misspellings
+      function misspell(w) {
+        const i = rnd(0, w.length - 1);
+        const c = 'abcdefghijklmnopqrstuvwxyz'[rnd(0, 25)];
+        return w.slice(0, i) + c + w.slice(i + 1);
+      }
+      const wrongSet = new Set();
+      while (wrongSet.size < 3) {
+        const m = misspell(correct);
+        if (m !== correct) wrongSet.add(m);
+      }
+      const choices = shuffle([correct, ...wrongSet].map(w => w.toUpperCase()));
+      return { type: 'word', text: 'Which spelling is correct?', answer: correct.toUpperCase(), choices, a: correct, b: '', op: 'spelling' };
+    },
+    'scramble': () => {
+      const level = state.grade;
+      const pool = level <= 3 ? SCRAMBLE_WORDS.slice(0, 10) :
+                   level <= 5 ? SCRAMBLE_WORDS.slice(0, 20) :
+                   SCRAMBLE_WORDS;
+      const correct = pickRandom(pool);
+      // Scramble the word
+      let scrambled = correct;
+      let tries = 0;
+      while ((scrambled === correct || scrambled === correct.split('').reverse().join('')) && tries < 20) {
+        scrambled = shuffle(correct.split('')).join('');
+        tries++;
+      }
+      // Pick 3 wrong words from pool
+      const wrong = shuffle(pool.filter(w => w !== correct)).slice(0, 3);
+      const choices = shuffle([correct, ...wrong].map(w => w.toUpperCase()));
+      return { type: 'word', text: `Unscramble: "${scrambled.toUpperCase()}"`, answer: correct.toUpperCase(), choices, a: scrambled, b: correct, op: 'scramble' };
+    },
+    'vocabulary': () => {
+      const item = pickRandom(VOCAB_WORDS);
+      const choices = shuffle([item.meaning, ...item.wrong]);
+      return { type: 'word', text: `What does "${item.word.toUpperCase()}" mean?`, answer: item.meaning, choices, a: item.word, b: item.meaning, op: 'vocab' };
+    },
+    'sight-words': () => {
+      const level = state.grade;
+      const pool = level <= 3 ? SIGHT_WORDS.easy : [...SIGHT_WORDS.easy, ...SIGHT_WORDS.hard];
+      const correct = pickRandom(pool);
+      // Show word briefly then ask to pick it — simplified: show scrambled, pick correct
+      const wrong = shuffle(pool.filter(w => w !== correct)).slice(0, 3);
+      const choices = shuffle([correct, ...wrong].map(w => w.toUpperCase()));
+      // Show the word with one letter changed, ask which is the real word
+      return { type: 'word', text: `Find the word: "${correct.toUpperCase()}"`, answer: correct.toUpperCase(), choices, a: correct, b: '', op: 'sight' };
+    },
+  };
+
+  // Word topics per level
+  const WORD_TOPICS = {
+    1: [
+      { value: 'sight-words', label: 'Sight Words' },
+      { value: 'rhyming', label: 'Rhyming' },
+      { value: 'missing-letter', label: 'Missing Letter' },
+    ],
+    2: [
+      { value: 'spelling', label: 'Spelling' },
+      { value: 'antonyms', label: 'Antonyms' },
+    ],
+    3: [
+      { value: 'synonyms', label: 'Synonyms' },
+      { value: 'scramble', label: 'Word Scramble' },
+    ],
+    4: [
+      { value: 'vocabulary', label: 'Vocabulary' },
+      { value: 'antonyms', label: 'Antonyms' },
+      { value: 'synonyms', label: 'Synonyms' },
+    ],
+    5: [
+      { value: 'vocabulary', label: 'Vocabulary' },
+      { value: 'scramble', label: 'Word Scramble' },
+      { value: 'spelling', label: 'Spelling' },
+    ],
+    6: [ { value: 'vocabulary', label: 'Vocabulary' }, { value: 'scramble', label: 'Word Scramble' } ],
+    7: [ { value: 'vocabulary', label: 'Vocabulary' }, { value: 'synonyms', label: 'Synonyms' } ],
+    8: [ { value: 'vocabulary', label: 'Vocabulary' }, { value: 'antonyms', label: 'Antonyms' } ],
+    9: [ { value: 'vocabulary', label: 'Vocabulary' }, { value: 'scramble', label: 'Word Scramble' } ],
+    10: [ { value: 'vocabulary', label: 'Vocabulary' }, { value: 'scramble', label: 'Word Scramble' } ],
+  };
+
+  // === TOPIC SELECTION ===
+  function getSelectedPlayer() {
+    const sel = $('player-select').value;
+    if (sel === '__new__') return ($('player-name-input').value.trim() || 'Anonymous');
+    return sel;
+  }
+
+  function populatePlayerSelect() {
+    const players = getPlayers();
+    const sel = $('player-select');
+    const prev = sel.value;
+    sel.innerHTML = players.map(p => `<option value="${p}">${p}</option>`).join('') +
+      '<option value="__new__">+ New Player</option>';
+    // Restore previous selection or last player
+    if (prev && players.includes(prev)) sel.value = prev;
+    else if (saved.lastPlayer && players.includes(saved.lastPlayer)) sel.value = saved.lastPlayer;
+    else if (players.length > 0) sel.value = players[0];
+    else sel.value = '__new__';
+    toggleNewPlayerInput();
+  }
+
+  function toggleNewPlayerInput() {
+    const isNew = $('player-select').value === '__new__';
+    $('new-player-wrap').classList.toggle('hidden', !isNew);
+    $('new-player-level-wrap').classList.toggle('hidden', !isNew);
+  }
+
+  function updateLevelOptions() {
+    const cat = $('category-select').value;
+    const player = getSelectedPlayer();
+    const unlocked = getPlayerMaxLevel(player, cat);
+    const sel = $('difficulty-select');
+    const prevVal = parseInt(sel.value, 10) || 1;
+    sel.innerHTML = '';
+    for (let i = 1; i <= 10; i++) {
+      if (i <= unlocked) {
+        sel.innerHTML += `<option value="${i}">Level ${i}</option>`;
+      } else {
+        sel.innerHTML += `<option value="${i}" disabled>Level ${i} \uD83D\uDD12</option>`;
+      }
     }
-    const big = Math.max(a, b), small = Math.min(a, b);
-    return { text: `${big} \u2212 ${small} = ?`, answer: big - small, a: big, b: small, op: '\u2212' };
+    // Restore selection if still unlocked, otherwise pick highest unlocked
+    sel.value = Math.min(prevVal, unlocked);
+    updateTopicSelect();
+  }
+
+  function updateTopicSelect() {
+    const cat = $('category-select').value;
+    const level = parseInt($('difficulty-select').value, 10);
+    const player = getSelectedPlayer();
+    const topicMap = cat === 'words' ? WORD_TOPICS : GRADE_TOPICS;
+    const topics = topicMap[level] || topicMap[1];
+    const passed = getPassedTopics(player, cat, level);
+    const sel = $('mode-select');
+    sel.innerHTML = topics.map((t, i) => {
+      const check = passed.includes(t.value) ? '\u2705 ' : '';
+      return `<option value="${t.value}"${i === 0 ? ' selected' : ''}>${check}${t.label}</option>`;
+    }).join('');
+  }
+
+  $('category-select').addEventListener('change', updateLevelOptions);
+  $('difficulty-select').addEventListener('change', updateTopicSelect);
+  // Update levels when player changes
+  $('player-select').addEventListener('change', () => {
+    toggleNewPlayerInput();
+    updateLevelOptions();
+  });
+  let nameTimeout;
+  $('player-name-input').addEventListener('input', () => {
+    clearTimeout(nameTimeout);
+    nameTimeout = setTimeout(updateLevelOptions, 300);
+  });
+  populatePlayerSelect();
+  updateLevelOptions();
+
+  function generateQuestion() {
+    const topic = state.mode;
+    const gen = TOPIC_GENERATORS[topic] || WORD_GENERATORS[topic];
+    if (gen) return gen();
+    return TOPIC_GENERATORS['add-5']();
+  }
+
+  // Shapes
+  // 2D Shapes
+  const SHAPES_2D = [
+    { name: 'Triangle', svg: '<polygon points="60,5 115,105 5,105" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Circle', svg: '<circle cx="60" cy="55" r="50" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Square', svg: '<rect x="10" y="5" width="100" height="100" fill="#45b7d1" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Rectangle', svg: '<rect x="5" y="20" width="110" height="70" fill="#96ceb4" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Star', svg: '<polygon points="60,5 72,40 110,40 80,62 90,100 60,78 30,100 40,62 10,40 48,40" fill="#ffd93d" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Heart', svg: '<path d="M60,95 C25,70 0,45 5,25 C10,5 30,5 45,20 L60,35 L75,20 C90,5 110,5 115,25 C120,45 95,70 60,95Z" fill="#ff69b4" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Diamond', svg: '<polygon points="60,5 110,55 60,105 10,55" fill="#a78bfa" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Oval', svg: '<ellipse cx="60" cy="55" rx="55" ry="38" fill="#f9a825" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Pentagon', svg: '<polygon points="60,5 112,40 95,100 25,100 8,40" fill="#26de81" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Hexagon', svg: '<polygon points="30,5 90,5 115,55 90,105 30,105 5,55" fill="#fd79a8" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Trapezoid', svg: '<polygon points="30,15 90,15 110,95 10,95" fill="#e17055" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Parallelogram', svg: '<polygon points="30,15 110,15 90,95 10,95" fill="#00b894" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Rhombus', svg: '<polygon points="60,5 110,55 60,105 10,55" fill="#6c5ce7" stroke="#fff" stroke-width="2" transform="scale(1,0.8) translate(0,12)"/>' },
+    { name: 'Arrow', svg: '<polygon points="60,5 100,45 80,45 80,105 40,105 40,45 20,45" fill="#00cec9" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Cross', svg: '<polygon points="40,5 80,5 80,35 110,35 110,75 80,75 80,105 40,105 40,75 10,75 10,35 40,35" fill="#e84393" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Crescent', svg: '<path d="M70,10 A50,50 0 1,1 70,100 A35,35 0 1,0 70,10Z" fill="#fdcb6e" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Octagon', svg: '<polygon points="38,5 82,5 110,33 110,77 82,105 38,105 10,77 10,33" fill="#a29bfe" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Semicircle', svg: '<path d="M10,70 A50,50 0 0,1 110,70 Z" fill="#55a3f0" stroke="#fff" stroke-width="2"/>' },
+  ];
+
+  // 3D Shapes (isometric style)
+  const SHAPES_3D = [
+    { name: 'Cube', svg:
+      '<polygon points="60,10 110,35 110,85 60,110 10,85 10,35" fill="#45b7d1" stroke="#fff" stroke-width="2"/>' +
+      '<polygon points="60,10 110,35 110,85 60,60" fill="#3a9fc1" stroke="#fff" stroke-width="1.5"/>' +
+      '<polygon points="60,10 10,35 10,85 60,60" fill="#5cc8e0" stroke="#fff" stroke-width="1.5"/>' +
+      '<polygon points="10,85 60,110 110,85 60,60" fill="#2d8aaa" stroke="#fff" stroke-width="1.5"/>' },
+    { name: 'Sphere', svg:
+      '<circle cx="60" cy="60" r="48" fill="#a78bfa" stroke="#fff" stroke-width="2"/>' +
+      '<ellipse cx="60" cy="60" rx="48" ry="16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>' +
+      '<ellipse cx="60" cy="60" rx="16" ry="48" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="4,3"/>' +
+      '<ellipse cx="45" cy="40" rx="12" ry="8" fill="rgba(255,255,255,0.2)" transform="rotate(-30 45 40)"/>' },
+    { name: 'Cylinder', svg:
+      '<ellipse cx="60" cy="30" rx="45" ry="18" fill="#26de81" stroke="#fff" stroke-width="2"/>' +
+      '<rect x="15" y="30" width="90" height="55" fill="#26de81" stroke="none"/>' +
+      '<line x1="15" y1="30" x2="15" y2="85" stroke="#fff" stroke-width="2"/>' +
+      '<line x1="105" y1="30" x2="105" y2="85" stroke="#fff" stroke-width="2"/>' +
+      '<ellipse cx="60" cy="85" rx="45" ry="18" fill="#1fb86e" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Cone', svg:
+      '<polygon points="60,10 15,90 105,90" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>' +
+      '<ellipse cx="60" cy="90" rx="45" ry="16" fill="#e05555" stroke="#fff" stroke-width="2"/>' },
+    { name: 'Pyramid', svg:
+      '<polygon points="60,10 10,80 60,105" fill="#f9a825" stroke="#fff" stroke-width="2"/>' +
+      '<polygon points="60,10 110,80 60,105" fill="#e08e1e" stroke="#fff" stroke-width="2"/>' +
+      '<polygon points="10,80 60,105 110,80" fill="#c87d18" stroke="#fff" stroke-width="1.5"/>' },
+    { name: 'Prism', svg:
+      '<polygon points="35,15 95,15 110,55 75,95 15,95 0,55" fill="#4ecdc4" stroke="#fff" stroke-width="2"/>' +
+      '<polygon points="95,15 110,55 75,95" fill="#3ab8b0" stroke="#fff" stroke-width="1.5"/>' +
+      '<polygon points="35,15 95,15 75,95 15,95" fill="#45c0b8" stroke="#fff" stroke-width="1"/>' },
+  ];
+
+  // All shapes combined for mixed
+  const SHAPES_ALL = [...SHAPES_2D, ...SHAPES_3D];
+
+  function generateShapeQuestion() {
+    const pool = state.mode === 'shapes-3d' ? SHAPES_3D :
+                 state.mode === 'shapes-all' ? SHAPES_ALL : SHAPES_2D;
+    const allNames = pool.map(s => s.name);
+    const idx = Math.floor(Math.random() * pool.length);
+    const correct = pool[idx];
+    // Pick 3 wrong answers
+    const others = allNames.filter(n => n !== correct.name);
+    const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+    const choices = [...shuffled, correct.name].sort(() => Math.random() - 0.5);
+    return {
+      type: 'shape',
+      text: 'What shape is this?',
+      svg: correct.svg,
+      answer: correct.name,
+      choices,
+      a: correct.name, b: '', op: 'shape',
+    };
+  }
+
+  function generateAnyQuestion() {
+    if (state.mode === 'shapes' || state.mode === 'shapes-3d' || state.mode === 'shapes-all') {
+      return generateShapeQuestion();
+    }
+    const q = generateQuestion();
+    // Word generators already return type:'word' with choices
+    return q;
   }
 
   function formatTime(s) {
@@ -913,12 +1826,59 @@
     state.questionCount++;
     setCharacter(state.charIdle, 'wave');
 
-    const q = generateQuestion();
+    const q = generateAnyQuestion();
     state.currentAnswer = q.answer;
     state.currentQuestion = q;
-    $('question-display').textContent = q.text;
-    $('answer-input').value = '';
-    updateAnswerDisplay();
+    state.questionType = q.type || 'math';
+
+    if (state.questionType === 'shape' && q.useNumpad) {
+      // Shape with diagram + numpad (composite shapes)
+      $('question-display').textContent = q.text;
+      $('shape-display').innerHTML = '<svg viewBox="0 0 100 110" width="120" height="130">' + q.svg + '</svg>';
+      $('shape-display').classList.remove('hidden');
+      $('answer-display').classList.remove('hidden');
+      $('numpad').classList.remove('hidden');
+      $('choices').classList.add('hidden');
+      $('answer-input').value = '';
+      updateAnswerDisplay();
+    } else if (state.questionType === 'shape') {
+      // Shape with choices
+      $('question-display').textContent = q.text;
+      $('shape-display').innerHTML = '<svg viewBox="0 0 120 110" width="120" height="110">' + q.svg + '</svg>';
+      $('shape-display').classList.remove('hidden');
+      $('answer-display').classList.add('hidden');
+      $('numpad').classList.add('hidden');
+      $('choices').innerHTML = q.choices.map(c =>
+        `<button type="button" class="choice-btn" data-choice="${c}">${c}</button>`
+      ).join('');
+      $('choices').classList.remove('hidden');
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => submitChoice(btn.dataset.choice), { once: true });
+      });
+    } else if (state.questionType === 'word') {
+      // Word question with choices
+      $('question-display').textContent = q.text;
+      $('shape-display').classList.add('hidden');
+      $('answer-display').classList.add('hidden');
+      $('numpad').classList.add('hidden');
+      $('choices').innerHTML = q.choices.map(c =>
+        `<button type="button" class="choice-btn" data-choice="${c}">${c}</button>`
+      ).join('');
+      $('choices').classList.remove('hidden');
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => submitChoice(btn.dataset.choice), { once: true });
+      });
+    } else {
+      // Math question — show numpad, hide choices
+      $('question-display').textContent = q.text;
+      $('shape-display').classList.add('hidden');
+      $('answer-display').classList.remove('hidden');
+      $('numpad').classList.remove('hidden');
+      $('choices').classList.add('hidden');
+      $('answer-input').value = '';
+      updateAnswerDisplay();
+    }
+
     state.isAcceptingInput = true;
     clearInterval(state.questionInterval);
     startQuestionTimer();
@@ -928,9 +1888,10 @@
     if (!state.isAcceptingInput || state.gameOver) return;
     state.isAcceptingInput = false;
     clearInterval(state.questionInterval);
-    const val = parseInt($('answer-input').value, 10);
+    const raw = $('answer-input').value;
+    const val = raw.includes('.') ? parseFloat(raw) : parseInt(raw, 10);
     const q = state.currentQuestion;
-    if (!isNaN(val) && val === state.currentAnswer) {
+    if (!isNaN(val) && Math.abs(val - state.currentAnswer) < 0.001) {
       state.correct++;
       state.combo++;
       if (state.combo > state.maxCombo) state.maxCombo = state.combo;
@@ -959,15 +1920,84 @@
     }
   }
 
+  function submitChoice(chosen) {
+    if (!state.isAcceptingInput || state.gameOver) return;
+    state.isAcceptingInput = false;
+    clearInterval(state.questionInterval);
+    const q = state.currentQuestion;
+
+    // Highlight correct/wrong on buttons
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+      if (btn.dataset.choice === state.currentAnswer) btn.classList.add('correct-choice');
+      if (btn.dataset.choice === chosen && chosen !== state.currentAnswer) btn.classList.add('wrong-choice');
+    });
+
+    if (chosen === state.currentAnswer) {
+      state.correct++;
+      state.combo++;
+      if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+      let earned = 1;
+      if (state.combo >= 10) earned = 3;
+      else if (state.combo >= 5) earned = 2;
+      state.stars += earned;
+      state.history.push({ ...q, result: 'correct' });
+      updateComboDisplay();
+      updateScoreDisplay();
+      playSound('correct');
+      setCharacter(state.charHappy, 'bounce');
+      checkLiveBadges();
+      showFeedback('correct');
+    } else {
+      state.incorrect++;
+      state.combo = 0;
+      state.history.push({ ...q, result: 'incorrect', given: chosen });
+      updateComboDisplay();
+      playSound('incorrect');
+      $('correct-answer-display').textContent = 'Answer: ' + state.currentAnswer;
+      setCharacter(state.charSad, 'shake');
+      checkLiveBadges();
+      showFeedback('incorrect');
+    }
+  }
+
   function handleTimeout() {
     if (!state.isAcceptingInput || state.gameOver) return;
     state.isAcceptingInput = false;
     clearInterval(state.questionInterval);
+
+    // Check if the current input already has the right answer
+    const raw = $('answer-input').value;
+    const val = raw.includes('.') ? parseFloat(raw) : parseInt(raw, 10);
+    if (!isNaN(val) && Math.abs(val - state.currentAnswer) < 0.001) {
+      // Correct answer was entered, just not submitted in time — count as correct
+      state.correct++;
+      state.combo++;
+      if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+      let earned = 1;
+      if (state.combo >= 10) earned = 3;
+      else if (state.combo >= 5) earned = 2;
+      state.stars += earned;
+      state.history.push({ ...state.currentQuestion, result: 'correct' });
+      updateComboDisplay();
+      updateScoreDisplay();
+      playSound('correct');
+      setCharacter(state.charHappy, 'bounce');
+      checkLiveBadges();
+      showFeedback('correct');
+      return;
+    }
+
     state.incorrect++;
     state.combo = 0;
     state.history.push({ ...state.currentQuestion, result: 'timeout' });
     updateComboDisplay();
     $('correct-answer-display').textContent = 'Answer: ' + state.currentAnswer;
+    // Highlight correct choice if shape or word question
+    if (state.questionType === 'shape' || state.questionType === 'word') {
+      document.querySelectorAll('.choice-btn').forEach(btn => {
+        if (btn.dataset.choice === state.currentAnswer) btn.classList.add('correct-choice');
+      });
+    }
     playSound('timeout');
     setCharacter(state.charSad, 'shake');
     showFeedback('incorrect');
@@ -1066,14 +2096,6 @@
     });
   }
 
-  // Theme unlocks
-  const THEME_UNLOCKS = {
-    space:  { condition: g => g >= 2, desc: 'Play 2 games' },
-    ocean:  { condition: (g, s) => s.stars >= 30, desc: 'Earn 30 stars in one game' },
-    jungle: { condition: (g, s) => s.correct >= 20, desc: 'Get 20 correct in one game' },
-    sunset: { condition: (g, s) => s.maxCombo >= 10, desc: 'Get 10x combo' },
-    candy:  { condition: (g, s) => { const t = s.correct + s.incorrect; return t > 0 && s.correct === t && t >= 10; }, desc: 'Perfect with 10+ questions' },
-  };
 
   function endGame() {
     state.gameOver = true;
@@ -1085,25 +2107,67 @@
     const pct = total > 0 ? Math.round((state.correct / total) * 100) : 0;
 
     // Best score
-    const key = state.difficulty;
+    const key = 'g' + state.grade + '-' + state.mode;
     const prevBest = saved.bestScore[key] || 0;
     const isNewBest = state.correct > prevBest;
     if (isNewBest) saved.bestScore[key] = state.correct;
 
-    // Theme unlocks
-    let newUnlocks = [];
-    for (const [theme, info] of Object.entries(THEME_UNLOCKS)) {
-      if (!saved.unlockedThemes.includes(theme) && info.condition(saved.gamesPlayed, state)) {
-        saved.unlockedThemes.push(theme);
-        newUnlocks.push(theme);
+    // Save game to history
+    const missedQuestions = state.history.filter(h => h.result !== 'correct').map(h => ({
+      q: `${h.a} ${h.op} ${h.b}`, result: h.result
+    }));
+    saved.gameHistory.push({
+      player: state.playerName || 'Anonymous',
+      date: new Date().toISOString(),
+      category: state.category || 'math',
+      level: state.grade,
+      topic: state.mode,
+      correct: state.correct,
+      incorrect: state.incorrect,
+      pct,
+      combo: state.maxCombo,
+      stars: state.stars,
+      missed: missedQuestions,
+    });
+    // Keep last 100 games
+    if (saved.gameHistory.length > 100) saved.gameHistory = saved.gameHistory.slice(-100);
+
+    // Level-up check
+    let leveledUp = false;
+    let topicPassed = false;
+    const cat = state.category || 'math';
+    const currentMax = getPlayerMaxLevel(state.playerName, cat);
+    const baseThreshold = parseInt($('threshold-input').value, 10) || PASS_THRESHOLD;
+    const threshold = cat === 'words' ? Math.max(baseThreshold - 20, 50) : baseThreshold;
+    const minQuestions = Math.ceil((state.totalTime / state.questionTime) * 1.5);
+    // Mark this topic as passed if threshold met
+    if (pct >= threshold && total >= minQuestions) {
+      markTopicPassed(state.playerName, cat, state.grade, state.mode);
+      topicPassed = true;
+      // Unlock next level only if ALL topics at current level are passed
+      if (state.grade === currentMax && state.grade < 10 && allTopicsPassed(state.playerName, cat, state.grade)) {
+        setPlayerMaxLevel(state.playerName, cat, currentMax + 1);
+        leveledUp = true;
       }
     }
+
     persist();
 
     // Stats
+    const levelUpHtml = leveledUp
+      ? `<div class="level-up-msg">Level ${state.grade + 1} Unlocked!</div>` : '';
+    const topicPassHtml = topicPassed && !leveledUp
+      ? `<div style="color:#27ae60;font-size:0.85rem;font-weight:600;margin:2px 0;">Topic Passed!</div>` : '';
+    // Show progress: how many topics passed at this level
+    const topicMap = cat === 'words' ? WORD_TOPICS : GRADE_TOPICS;
+    const allTopics = topicMap[state.grade] || [];
+    const passedTopics = getPassedTopics(state.playerName, cat, state.grade);
+    const progressHtml = state.grade === currentMax && !leveledUp
+      ? `<div style="font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:2px;">Topics: ${passedTopics.length}/${allTopics.length} passed</div>` : '';
     $('results-stats').innerHTML =
       `<div class="big">${pct}%</div>` +
       (isNewBest ? '<div><span class="new-best">NEW BEST!</span></div>' : '') +
+      levelUpHtml + topicPassHtml + progressHtml +
       `Total: ${total} &middot; Correct: ${state.correct} &middot; Stars: \u2728${state.stars}<br>` +
       `Best Combo: ${state.maxCombo}x`;
 
@@ -1117,15 +2181,6 @@
         ).join('');
     } else {
       $('trophies').innerHTML = '';
-    }
-
-    // Unlock message
-    if (newUnlocks.length > 0) {
-      $('unlock-msg').innerHTML = 'Theme unlocked: ' + newUnlocks.map(t =>
-        t.charAt(0).toUpperCase() + t.slice(1)
-      ).join(', ') + '!';
-    } else {
-      $('unlock-msg').textContent = '';
     }
 
     // Weakness
@@ -1151,14 +2206,52 @@
         }).join('') + '</ul>';
     }
 
-    playSound('gameover');
+    if (leveledUp) {
+      playSound('badge');
+      spawnConfetti();
+    } else {
+      playSound('gameover');
+    }
     showScreen('results-screen');
   }
 
+  // Time scaling per level
+  const LEVEL_TIMES = {
+    1: { total: 60, perQ: 5 },
+    2: { total: 60, perQ: 5 },
+    3: { total: 60, perQ: 6 },
+    4: { total: 75, perQ: 7 },
+    5: { total: 75, perQ: 8 },
+    6: { total: 90, perQ: 10 },
+    7: { total: 90, perQ: 12 },
+    8: { total: 120, perQ: 15 },
+    9: { total: 120, perQ: 20 },
+    10: { total: 150, perQ: 25 },
+  };
+
   function startGame() {
-    state.totalTime = Math.max(10, parseInt($('total-time-input').value, 10) || 120);
-    state.questionTime = Math.max(1, parseInt($('question-time-input').value, 10) || 5);
-    state.difficulty = $('difficulty-select').value;
+    const level = parseInt($('difficulty-select').value, 10);
+    const lt = LEVEL_TIMES[level] || { total: 60, perQ: 5 };
+    // Use settings values if manually changed, otherwise use level defaults
+    const settingsTotal = parseInt($('total-time-input').value, 10);
+    const settingsPerQ = parseInt($('question-time-input').value, 10);
+    state.totalTime = Math.max(10, settingsTotal || lt.total);
+    state.questionTime = Math.max(1, settingsPerQ || lt.perQ);
+    state.playerName = getSelectedPlayer();
+    // Set starting level for new players
+    if ($('player-select').value === '__new__' && state.playerName !== 'Anonymous') {
+      const startLevel = parseInt($('new-player-level').value, 10) || 1;
+      const cat = $('category-select').value;
+      if (!saved.playerLevels[state.playerName]) {
+        setPlayerMaxLevel(state.playerName, 'math', startLevel);
+        setPlayerMaxLevel(state.playerName, 'words', startLevel);
+      }
+    }
+    saved.lastPlayer = state.playerName;
+    persist();
+    state.category = $('category-select').value;
+    state.grade = parseInt($('difficulty-select').value, 10);
+    state.mode = $('mode-select').value;
     state.correct = 0; state.incorrect = 0; state.combo = 0; state.maxCombo = 0;
     state.stars = 0; state.history = []; state.questionCount = 0;
     state.gameOver = false; state.isAcceptingInput = true;
@@ -1183,7 +2276,7 @@
 
   // Init
   applyTheme(saved.theme);
-  updateThemeButtons();
+
   showBestScore();
 
   $('start-btn').addEventListener('click', () => {
@@ -1191,10 +2284,117 @@
     startGame();
   });
   $('play-again-btn').addEventListener('click', () => {
-    updateThemeButtons();
+    populatePlayerSelect();
     showBestScore();
+    updateLevelOptions();
     showScreen('start-screen');
   });
+  $('cancel-btn').addEventListener('click', () => {
+    state.gameOver = true;
+    clearInterval(state.totalInterval);
+    clearInterval(state.questionInterval);
+    stopBgm();
+    populatePlayerSelect();
+    showBestScore();
+    updateLevelOptions();
+    showScreen('start-screen');
+  });
+
+  // Dashboard
+  function getPlayers() {
+    const names = new Set(saved.gameHistory.map(g => g.player));
+    return [...names].sort();
+  }
+
+  function renderDashboard(player) {
+    const games = player === '__all__'
+      ? saved.gameHistory
+      : saved.gameHistory.filter(g => g.player === player);
+
+    // Summary
+    const totalGames = games.length;
+    const totalCorrect = games.reduce((s, g) => s + g.correct, 0);
+    const totalIncorrect = games.reduce((s, g) => s + g.incorrect, 0);
+    const totalQ = totalCorrect + totalIncorrect;
+    const avgPct = totalQ > 0 ? Math.round((totalCorrect / totalQ) * 100) : 0;
+    const totalStars = games.reduce((s, g) => s + (g.stars || 0), 0);
+
+    $('dash-summary').innerHTML =
+      `<div class="dash-stat"><div class="val">${totalGames}</div><div class="lbl">Games</div></div>` +
+      `<div class="dash-stat"><div class="val">${avgPct}%</div><div class="lbl">Avg Accuracy</div></div>` +
+      `<div class="dash-stat"><div class="val">${totalStars}</div><div class="lbl">Total Stars</div></div>`;
+
+    // Accuracy trend chart (last 20)
+    const recent = games.slice(-20);
+    if (recent.length > 0) {
+      $('dash-chart').innerHTML = recent.map(g => {
+        const cls = g.pct >= 80 ? 'good' : g.pct >= 50 ? 'ok' : 'bad';
+        return `<div class="dash-bar ${cls}" style="height:${Math.max(g.pct, 5)}%" title="${g.pct}%"></div>`;
+      }).join('');
+    } else {
+      $('dash-chart').innerHTML = '<div class="dash-empty">No games yet</div>';
+    }
+
+    // Weak patterns across all games
+    const missed = {};
+    games.forEach(g => {
+      (g.missed || []).forEach(m => {
+        missed[m.q] = (missed[m.q] || 0) + 1;
+      });
+    });
+    const sorted = Object.entries(missed).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    if (sorted.length > 0) {
+      $('dash-weak').innerHTML = '<ul class="dash-weak-list">' + sorted.map(([q, cnt]) =>
+        `<li class="dash-weak-item"><span class="q">${q}</span><span class="cnt">${cnt}x missed</span></li>`
+      ).join('') + '</ul>';
+    } else {
+      $('dash-weak').innerHTML = '<div class="dash-empty">No mistakes recorded</div>';
+    }
+
+    // Recent games list
+    if (games.length > 0) {
+      $('dash-games').innerHTML = games.slice(-20).reverse().map(g => {
+        const d = new Date(g.date);
+        const dateStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+        const scoreClass = g.pct >= 80 ? 'high' : g.pct >= 50 ? 'mid' : 'low';
+        const total = g.correct + g.incorrect;
+        return `<li class="dash-game">
+          <span class="date">${dateStr}</span>
+          <span class="info">${g.player} &middot; L${g.level} ${g.topic}</span>
+          <span class="score ${scoreClass}">${g.pct}% (${g.correct}/${total})</span>
+        </li>`;
+      }).join('');
+    } else {
+      $('dash-games').innerHTML = '<li class="dash-empty">No games yet</li>';
+    }
+  }
+
+  $('dashboard-btn').addEventListener('click', () => {
+    const players = getPlayers();
+    const sel = $('dash-player-select');
+    sel.innerHTML = '<option value="__all__">All Players</option>' +
+      players.map(p => `<option value="${p}">${p}</option>`).join('');
+    renderDashboard('__all__');
+    showScreen('dashboard-screen');
+  });
+
+  $('dash-player-select').addEventListener('change', () => {
+    renderDashboard($('dash-player-select').value);
+  });
+
+  $('dash-back-btn').addEventListener('click', () => {
+    showScreen('start-screen');
+  });
+
+  // Settings screen
+  $('settings-btn').addEventListener('click', () => showScreen('settings-screen'));
+  $('settings-back-btn').addEventListener('click', () => showScreen('start-screen'));
+  $('threshold-input').addEventListener('input', () => {
+    $('threshold-display').textContent = $('threshold-input').value;
+  });
+
+  // Restore last player
+  populatePlayerSelect();
 
   // Numpad
   document.querySelectorAll('.numpad-btn').forEach(btn => {
@@ -1204,7 +2404,7 @@
       const action = btn.dataset.action;
       if (num !== undefined) {
         const input = $('answer-input');
-        if (input.value.length < 3) {
+        if (input.value.length < 6) {
           input.value += num;
           updateAnswerDisplay();
         }
@@ -1213,8 +2413,17 @@
           const rect = btn.getBoundingClientRect();
           floatStar(rect.left + rect.width / 2 - 10, rect.top);
         }
+      } else if (action === 'dot') {
+        const input = $('answer-input');
+        if (!input.value.includes('.')) { input.value += '.'; updateAnswerDisplay(); }
       } else if (action === 'clear') {
         $('answer-input').value = '';
+        updateAnswerDisplay();
+      } else if (action === 'sign') {
+        const input = $('answer-input');
+        if (input.value.startsWith('-')) input.value = input.value.slice(1);
+        else if (input.value.length > 0) input.value = '-' + input.value;
+        else input.value = '-';
         updateAnswerDisplay();
       } else if (action === 'submit') {
         submitAnswer();
@@ -1228,7 +2437,15 @@
     if (!state.isAcceptingInput || state.gameOver) return;
     if (e.key >= '0' && e.key <= '9') {
       const input = $('answer-input');
-      if (input.value.length < 3) { input.value += e.key; updateAnswerDisplay(); }
+      if (input.value.length < 6) { input.value += e.key; updateAnswerDisplay(); }
+    } else if (e.key === '.') {
+      const input = $('answer-input');
+      if (!input.value.includes('.')) { input.value += '.'; updateAnswerDisplay(); }
+    } else if (e.key === '-') {
+      const input = $('answer-input');
+      if (input.value.startsWith('-')) input.value = input.value.slice(1);
+      else input.value = '-' + input.value;
+      updateAnswerDisplay();
     } else if (e.key === 'Backspace') {
       const input = $('answer-input');
       input.value = input.value.slice(0, -1);
