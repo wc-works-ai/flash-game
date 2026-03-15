@@ -1485,7 +1485,7 @@
       const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('').filter(c => c !== missing);
       const wrong = shuffle(alphabet).slice(0, 3);
       const choices = shuffle([missing, ...wrong]);
-      return { type: 'word', text: display.toUpperCase(), answer: missing, choices: choices.map(c => c.toUpperCase()), a: word, b: missing, op: 'missing' };
+      return { type: 'word', text: display.toUpperCase(), answer: missing.toUpperCase(), choices: choices.map(c => c.toUpperCase()), a: word, b: missing, op: 'missing' };
     },
     'spelling': () => {
       const level = state.grade;
